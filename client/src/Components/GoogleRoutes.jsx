@@ -6,10 +6,12 @@ const GoogleRoutes = () => {
     const [data, setData] = useState()
     const responceGoogle = async (authResult) => {
         try {
-            console.log(authResult, "code With Me");
 
-            setData(authResult)
+            if (authResult['code']) {
 
+            }
+            console.log(authResult);
+            // setData(authResult)
         } catch (error) {
             console.log("error found ", error);
         }
@@ -17,7 +19,7 @@ const GoogleRoutes = () => {
 
     const googleLogin = useGoogleLogin({
         onSuccess: () => responceGoogle,
-        onError: () => (error) => console.log("Login Failed: ", error),
+        onError: () => responceGoogle,
         flow: 'auth-code'
 
     })
@@ -25,7 +27,7 @@ const GoogleRoutes = () => {
     return (
         <div>
 
-            <h1> {data} after the login Data</h1>
+            {/* <h1> {data} after the login Data</h1> */}
             <button onClick={googleLogin}>
                 Login With Google
             </button>
