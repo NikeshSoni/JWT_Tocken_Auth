@@ -1,33 +1,22 @@
 import { useState } from 'react'
 import './App.css';
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom"
-import GoogleRoutes from './Components/GoogleRoutes';
-import DashBoard from './Components/DashBoard';
-import PageNotfound from './Components/PageNotfound';
-import { GoogleOAuthProvider } from "@react-oauth/google"
-
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import Home from "./Pages/Home";
+import Auth from "./Pages/Auth";
+import CreateRecipe from "./Pages/CreateRecipe";
+import SavedRecipe from "./Pages/SavedRecipe";
+import Navbar from './components/Navbar';
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  const GoogleAuthWrapper = () => {
-    return (
-      <GoogleOAuthProvider clientId='671088416652-bd5deeoh5tdb4mudo1iv1ahmajhgevg3.apps.googleusercontent.com'>
-        <GoogleRoutes />
-      </GoogleOAuthProvider>
-    )
-  }
   return (
     <>
-
       <BrowserRouter>
+      <Navbar />
         <Routes>
-          <Route path="/login" element={<GoogleAuthWrapper />} />
-          <Route path="/" element={<Navigate to="/login" />} />
-          <Route path="/dashboard" element={<DashBoard />} />
-          <Route path="*" element={<PageNotfound />} />
-
-          PageNotfound
+          <Route path="/" element={<Home />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/createrecipe" element={<CreateRecipe />} />
+          <Route path="/savedrecipe" element={<SavedRecipe />} />
         </Routes>
       </BrowserRouter>
     </>
