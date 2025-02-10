@@ -1,0 +1,18 @@
+/* .animated-up-down {
+    animation: upDown 3s ease-in-out infinite;
+  }
+  
+  @keyframes upDown {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px); /* Moves the image up */
+    /* }
+    100% {
+      transform: translateY(0);
+    }
+  } */ */
+
+  
+  
