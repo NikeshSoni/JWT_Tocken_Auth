@@ -63,15 +63,6 @@ const Register = ({ isModalOpen, closeModal }) => {
                 </div>
             )}
         </>
-
-        // <Form
-        //     username={username}
-        //     setUsername={setUsername}
-        //     password={password}
-        //     setPassword={setPassword}
-        //     isModalOpen={isModalOpen}
-        //     // setIsModalOpen={setIsModalOpen}
-        // />
     )
 }
 
