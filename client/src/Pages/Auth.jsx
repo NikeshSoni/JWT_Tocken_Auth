@@ -1,24 +1,37 @@
 import { useState } from 'react';
-import axios from "axios"
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export const Auth = ({ isModalOpen, closeModal, setIsAuthenticated }) => {
+
+    const navigate = useNavigate();
     const [isLogin, setIsLogin] = useState(false);
 
-    if (!isModalOpen) return null; // Avoid rendering unnecessary elements
+    if (!isModalOpen) return null;  // Avoid rendering unnecessary elements
+
+
 
     return (
         <div className="fixed inset-0 gap-5 backdrop-blur w-full bg-opacity-50 flex justify-center items-center">
             {isLogin ? (
-                <Login isModalOpen={isModalOpen} closeModal={closeModal} setIsAuthenticated={setIsAuthenticated} />
+                <Login isModalOpen={isModalOpen}
+                    setIsLogin={setIsLogin}
+                    closeModal={closeModal}
+                    setIsAuthenticated={setIsAuthenticated}
+                    navigate={navigate}
+                />
             ) : (
-                <Register closeModal={closeModal} setIsLogin={setIsLogin} />
+                <Register closeModal={closeModal}
+                    setIsLogin={setIsLogin}
+                    navigate={navigate}
+                />
             )}
         </div>
     );
 };
 
 
-const Login = ({ closeModal, setIsAuthenticated }) => {
+const Login = ({ closeModal, setIsAuthenticated, setIsLogin, navigate }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
@@ -29,6 +42,8 @@ const Login = ({ closeModal, setIsAuthenticated }) => {
             alert("Login successful");
             setIsAuthenticated(true);
             closeModal();
+            setIsLogin(true);
+            navigate('/')
         } catch (error) {
             console.error(error);
             alert("Login failed");
@@ -67,13 +82,18 @@ const Login = ({ closeModal, setIsAuthenticated }) => {
                         Close
                     </button>
                 </div>
+                <div className="mt-2">
+                    <button type="button" onClick={() => setIsLogin(false)} className="text-blue-500 underline">
+                        registered here
+                    </button>
+                </div>
             </form>
         </div>
     );
 };
 
 
-const Register = ({ closeModal, setIsLogin }) => {
+const Register = ({ closeModal, setIsLogin, navigate }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
@@ -83,6 +103,7 @@ const Register = ({ closeModal, setIsLogin }) => {
             await axios.post("http://localhost:5001/auth/register", { username, password });
             alert("Registration successful! Please log in.");
             setIsLogin(true);
+            navigate("/")
         } catch (error) {
             console.error(error);
             alert("Registration failed");
