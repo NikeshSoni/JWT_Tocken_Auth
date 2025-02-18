@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie"
 
 export const Auth = ({ isModalOpen, closeModal, setIsAuthenticated }) => {
 
@@ -8,8 +9,6 @@ export const Auth = ({ isModalOpen, closeModal, setIsAuthenticated }) => {
     const [isLogin, setIsLogin] = useState(false);
 
     if (!isModalOpen) return null;  // Avoid rendering unnecessary elements
-
-
 
     return (
         <div className="fixed inset-0 gap-5 backdrop-blur w-full bg-opacity-50 flex justify-center items-center">
@@ -35,14 +34,18 @@ const Login = ({ closeModal, setIsAuthenticated, setIsLogin, navigate }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
+    const [_, setCookies] = useCookies(["access_token"])
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post("http://localhost:5001/auth/login", { username, password });
+            const responce = await axios.post("http://localhost:5001/auth/login", { username, password });
             alert("Login successful");
             setIsAuthenticated(true);
             closeModal();
             setIsLogin(true);
+            setCookies("access_token", responce.data.token);
+            window.localStorage.setItem("userId", responce.data.userId)
             navigate('/')
         } catch (error) {
             console.error(error);

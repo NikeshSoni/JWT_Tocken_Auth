@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from "react-router-dom";
 import { Auth } from '../Pages/Auth';
+import { Button } from "@/components/ui/button"
 
 const Navbar = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,12 +21,12 @@ const Navbar = () => {
 
                 <div>
                     {!isAuthenticated ? (
-                        <button onClick={openModal} className="px-6 py-2 bg-blue-400 text-white rounded-md hover:bg-blue-700">
-                            Register / Login
-                        </button>
+                        <Button className="bg-blue-400" onClick={openModal}>
+                            <Link href="/login">Register</Link>
+                        </Button>
                     ) : (
-                        <button onClick={() => setIsAuthenticated(false)} className="px-6 py-2 bg-red-400 text-white rounded-md hover:bg-red-700">
-                            Logout
+                        <button onClick={openModal} className="px-6 py-2 bg-red-400 text-white rounded-md hover:bg-red-700">
+                            Login
                         </button>
                     )}
                 </div>

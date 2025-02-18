@@ -24,7 +24,6 @@ mongoose.connect("mongodb://127.0.0.1:27017/Recipe", {
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.log(err));
 
-
 app.listen(PORT, () => {
   console.log(`code is running ${PORT}`);
 })  
