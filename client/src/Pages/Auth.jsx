@@ -45,7 +45,8 @@ const Login = ({ closeModal, setIsAuthenticated, setIsLogin, navigate }) => {
             closeModal();
             setIsLogin(true);
             setCookies("access_token", responce.data.token);
-            window.localStorage.setItem("userId", responce.data.userId)
+            // window.localStorage.setItem("userId", responce.data.userId)
+            window.localStorage.setItem("userID", responce.data.userID);
             navigate('/')
         } catch (error) {
             console.error(error);

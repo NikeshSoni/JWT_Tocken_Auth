@@ -1,11 +1,16 @@
 import { useState } from 'react';
 import { Link } from "react-router-dom";
 import { Auth } from '../Pages/Auth';
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
+import { useCookies } from "react-cookie"
+
 
 const Navbar = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    const [cookies, setCookies] = useCookies(["access_token"])
+
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
@@ -26,9 +31,22 @@ const Navbar = () => {
                         </Button>
                     ) : (
                         <button onClick={openModal} className="px-6 py-2 bg-red-400 text-white rounded-md hover:bg-red-700">
-                            Login
+                            Logout
                         </button>
                     )}
+
+
+                    {/* {!cookies.access_token ? (
+                        <Button className="bg-blue-400" onClick={openModal}>
+                            <Link href="/login">Login/Register</Link>
+                        </Button>
+                    ) : (
+                        <button onClick={openModal} className="px-6 py-2 bg-red-400 text-white rounded-md hover:bg-red-700">
+                            Logout
+                        </button>
+                    )} */}
+
+
                 </div>
             </nav>
 

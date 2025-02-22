@@ -6,10 +6,7 @@ const router = express.Router();
 import { UserModel } from "../models/Users.js";
 
 router.post("/register", async (req, res) => {
-  console.log("Received Body:", req.body); // Debugging
   const { username, password } = req.body;
-
-  console.log(username , password , "username");
 
   if (!username || !password) {
     return res.status(400).json({ message: "Missing username or password" });
@@ -62,18 +59,4 @@ router.post("/login", async (req, res) => {
   res.json({ tokenChecker, userID: user._id });
 });
 
-export { router as userRouter };
-
-// export const verifyToken = (req, res, next) => {
-//   const authHeader = req.headers.authorization;
-//   if (authHeader) {
-//     jwt.verify(authHeader, "secret", (err) => {
-//       if (err) {
-//         return res.sendStatus(403);
-//       }
-//       next();
-//     });
-//   } else {
-//     res.sendStatus(401);
-//   }
-// };
+export { router as userRouter };  

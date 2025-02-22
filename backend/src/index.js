@@ -6,6 +6,8 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import { userRouter } from './Routes/user.js'
+import { recipesRouter } from './Routes/recipes.js'
+
 
 
 const app = express();
@@ -13,6 +15,7 @@ const app = express();
 app.use(express.json())
 app.use(cors())
 app.use("/auth" , userRouter)
+app.use("/recipes" , recipesRouter)
 
 const PORT = process.env.PORT || 5001
 ;

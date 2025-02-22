@@ -9,7 +9,10 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-    }
+    },
+    savedrecipes: [{
+        type: mongoose.Schema.Types.ObjectId, ref:"recipe",
+    }]
 })
 
 export const UserModel = mongoose.model("users", UserSchema)
