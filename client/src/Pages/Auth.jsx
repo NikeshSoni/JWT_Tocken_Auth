@@ -1,7 +1,8 @@
+import { Toaster , toast} from "sonner";
 import { useState } from 'react';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie"
+import { useCookies } from "react-cookie";
 
 export const Auth = ({ isModalOpen, closeModal, setIsAuthenticated }) => {
 
@@ -40,22 +41,24 @@ const Login = ({ closeModal, setIsAuthenticated, setIsLogin, navigate }) => {
         e.preventDefault();
         try {
             const responce = await axios.post("http://localhost:5001/auth/login", { username, password });
-            alert("Login successful");
+            // alert("Login successful");
+            toast.success("Login successful");
             setIsAuthenticated(true);
             closeModal();
             setIsLogin(true);
             setCookies("access_token", responce.data.token);
-            // window.localStorage.setItem("userId", responce.data.userId)
             window.localStorage.setItem("userID", responce.data.userID);
             navigate('/')
         } catch (error) {
             console.error(error);
-            alert("Login failed");
+            toast.error("Login failed. Please log in.");
+
         }
     };
 
     return (
         <div className="max-w-md w-[50%] p-4 bg-white shadow-lg rounded-lg">
+            <Toaster richColors position="top-right" />
             <form onSubmit={handleSubmit} className="space-y-4">
                 <h2 className="text-2xl text-left text-black font-semibold">Login</h2>
                 <div>
@@ -105,8 +108,10 @@ const Register = ({ closeModal, setIsLogin, navigate }) => {
         e.preventDefault();
         try {
             await axios.post("http://localhost:5001/auth/register", { username, password });
-            alert("Registration successful! Please log in.");
+            alert("Registration successful!");
+            toast.success("Registration successful!");
             setIsLogin(true);
+            closeModal();
             navigate("/")
         } catch (error) {
             console.error(error);

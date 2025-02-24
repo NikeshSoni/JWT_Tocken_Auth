@@ -14,8 +14,6 @@ router.post("/register", async (req, res) => {
   const user = await UserModel.findOne({ username });
 
   console.log(user , "user");
-
-
   //  identify the user before createing  new user 
   if (user) {
     return res.status(400).json({ message: "Username already exists" });
@@ -28,8 +26,6 @@ router.post("/register", async (req, res) => {
   const userHandler = new UserModel({ username, password: passwordHandler });
   await userHandler.save();
   res.json({ message: "User registered successfully" });
-
-  res.json(userHandler);
 });
 
 router.post("/login", async (req, res) => {

@@ -1,11 +1,14 @@
 import axios from "axios";
-import { useState , useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Label } from "../components/ui/Label"
 import { Input } from "../components/ui/input"
 import { Textarea } from "../components/ui/Textarea"
 import { Button } from "../components/ui/Button"
-import useGetUserId from "../hooks/useGetUserId"
+import useGetUserId from "../hooks/useGetUserId";
+import { toast, Toaster } from "sonner";
 
+// import { ToastAction } from "@/components/ui/toast"
+// import { useToast } from "@/components/hooks/use-toast"
 
 const CreateRecipe = () => {
 
@@ -21,14 +24,12 @@ const CreateRecipe = () => {
         userOwner: null,
     });
 
-    console.log(useUserId , "useUserID");
-
     useEffect(() => {
         if (useUserId) {
             setRecipe((prev) => ({ ...prev, userOwner: useUserId }));
         }
     }, [useUserId]);
-    
+
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -49,14 +50,15 @@ const CreateRecipe = () => {
     const onSubmitHandler = async (event) => {
         event.preventDefault();
         if (!recipe.userOwner) {
-            alert("User ID is missing. Please log in.");
+            // alert("User ID is missing. Please log in.");
+            toast.error("User ID is missing. Please log in.");
+
             return;
         }
+
         try {
             await axios.post("http://localhost:5001/recipes", recipe);
-
             console.log(useUserId);
-            
             alert("Recipe Created")
         } catch (error) {
             console.log(error)
@@ -65,6 +67,8 @@ const CreateRecipe = () => {
 
     return (
         <div className=''>
+            <Toaster richColors position="top-right" />
+            
             <div className='w-[50%] mx-auto text-start mt-4'>
                 <h1 className='text-[22px]'>Create Recipe</h1>
             </div>
@@ -77,7 +81,8 @@ const CreateRecipe = () => {
                             name="name"
                             // value={recipe.name}
                             placeholder="Name"
-                            onChange={handleChange} />
+                            onChange={handleChange}
+                            required />
                     </div>
                     <div>
                         <Label htmlFor="Ingredients">Ingredients</Label>
@@ -92,6 +97,7 @@ const CreateRecipe = () => {
                                     placeholder="ingredients"
                                     value={ingredient}
                                     onChange={(event) => handleIngredientsChange(event, index)}
+                                    required
                                 />
                             ))}
                         </div>
@@ -104,7 +110,7 @@ const CreateRecipe = () => {
                             name="instructions"
                             placeholder="instructions"
                             onChange={handleChange}
-                            value={recipe.instructions} />
+                            value={recipe.instructions} required />
                     </div>
 
                     <div>
@@ -112,7 +118,7 @@ const CreateRecipe = () => {
                         <Input className='my-2' id="img_url"
                             type="text" onChange={handleChange}
                             // value={recipe.imageUrl}
-                            name="imageUrl" />
+                            name="imageUrl" required />
                     </div>
                     <div>
                         <Label htmlFor="cookingTime">Cooking time (minutes)</Label>
@@ -120,7 +126,8 @@ const CreateRecipe = () => {
                             type="number" placeholder="cookingTime"
                             onChange={handleChange}
                             name="cookingTime"
-                        // value={recipe.cookingTime}
+                            // value={recipe.cookingTime} 
+                            required
                         />
                     </div>
 
