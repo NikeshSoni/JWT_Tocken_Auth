@@ -59,7 +59,17 @@ const CreateRecipe = () => {
         try {
             await axios.post("http://localhost:5001/recipes", recipe);
             console.log(useUserId);
-            alert("Recipe Created")
+            alert("Recipe Created");
+            setRecipe({
+                name: "",
+                description: "",
+                ingredients: [],
+                instructions: "",
+                imageUrl: "",
+                cookingTime: 0,
+                userOwner: useUserId, // Keep user ID
+            });
+
         } catch (error) {
             console.log(error)
         }
@@ -68,7 +78,7 @@ const CreateRecipe = () => {
     return (
         <div className=''>
             <Toaster richColors position="top-right" />
-            
+
             <div className='w-[50%] mx-auto text-start mt-4'>
                 <h1 className='text-[22px]'>Create Recipe</h1>
             </div>
@@ -79,7 +89,7 @@ const CreateRecipe = () => {
                         <Input id="name" className='my-2'
                             type="text"
                             name="name"
-                            // value={recipe.name}
+                            value={recipe.name}
                             placeholder="Name"
                             onChange={handleChange}
                             required />
