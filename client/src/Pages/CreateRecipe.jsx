@@ -7,9 +7,6 @@ import { Button } from "../components/ui/Button"
 import useGetUserId from "../hooks/useGetUserId";
 import { toast, Toaster } from "sonner";
 
-// import { ToastAction } from "@/components/ui/toast"
-// import { useToast } from "@/components/hooks/use-toast"
-
 const CreateRecipe = () => {
 
     const useUserId = useGetUserId()
@@ -49,17 +46,29 @@ const CreateRecipe = () => {
 
     const onSubmitHandler = async (event) => {
         event.preventDefault();
-        if (!recipe.userOwner) {
-            // alert("User ID is missing. Please log in.");
-            toast.error("User ID is missing. Please log in.");
 
+        if (!recipe.userOwner) {
+            toast.error("User ID is missing. Please log in.");
             return;
         }
 
         try {
             await axios.post("http://localhost:5001/recipes", recipe);
-            console.log(useUserId);
-            alert("Recipe Created");
+
+            // ✅ Show success notification
+            toast.success("Recipe Created Successfully!", {
+                duration: 2000, // 3 seconds
+                style: {
+                    background: "#4ade80", // Green background
+                    color: "#fff",
+                    borderRadius: "8px",
+                    fontSize: "16px",
+                    padding: "10px 15px",
+                    marginTop: "30px"
+                },
+            });
+
+            // ✅ Reset form fields
             setRecipe({
                 name: "",
                 description: "",
@@ -67,23 +76,28 @@ const CreateRecipe = () => {
                 instructions: "",
                 imageUrl: "",
                 cookingTime: 0,
-                userOwner: useUserId, // Keep user ID
+                userOwner: useUserId,
             });
 
         } catch (error) {
-            console.log(error)
+            // console.error(error);
+            toast.error("Failed to create recipe. Please try again!", { duration: 1000, });
         }
-    }
+    };
 
     return (
         <div className=''>
-            <Toaster richColors position="top-right" />
+            <Toaster richColors position="top-left" />
+            {/* <Toaster richColors position="top-left" /> */}
 
-            <div className='w-[50%] mx-auto text-start mt-4'>
-                <h1 className='text-[22px]'>Create Recipe</h1>
-            </div>
+
             <form onSubmit={onSubmitHandler}>
-                <div className='w-[50%] mx-auto'>
+
+                <div className='w-[50%] mx-auto p-4 shadow-lg'>
+
+                    <div className='w-[50%] text-start mt-4'>
+                        <h1 className='text-[22px]'>Create Recipe</h1>
+                    </div>
                     <div className="">
                         <Label htmlFor="Neme" >Neme</Label>
                         <Input id="name" className='my-2'
@@ -114,7 +128,7 @@ const CreateRecipe = () => {
                     </div>
 
                     <div>
-                        <Label htmlFor="Instructions">instructions</Label>
+                        <Label htmlFor="Instructions">Instructions</Label>
                         <Textarea className='my-2' id="instructions"
                             type="text"
                             name="instructions"
@@ -124,21 +138,22 @@ const CreateRecipe = () => {
                     </div>
 
                     <div>
-                        <Label htmlFor="img_url">Img Url</Label>
-                        <Input className='my-2' id="img_url"
-                            type="text" onChange={handleChange}
-                            // value={recipe.imageUrl}
-                            name="imageUrl" required />
+                        <Label htmlFor="imageUrl">Img Url</Label>
+                        <Input className='my-2' id="imageUrl"
+                            type="text"
+                            name="imageUrl"
+                            value={recipe.imageUrl} // ✅ Ensure this is set
+                            onChange={handleChange}
+                            required />
                     </div>
                     <div>
                         <Label htmlFor="cookingTime">Cooking time (minutes)</Label>
                         <Input className='my-2' id="cookingTime"
-                            type="number" placeholder="cookingTime"
-                            onChange={handleChange}
+                            type="number"
                             name="cookingTime"
-                            // value={recipe.cookingTime} 
-                            required
-                        />
+                            value={recipe.cookingTime} // ✅ Ensure this is set
+                            onChange={handleChange}
+                            required />
                     </div>
 
                     <Button type="submit">submit</Button>

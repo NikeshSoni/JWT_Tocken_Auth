@@ -20,7 +20,6 @@ import { Button } from "@/components/ui/button"
 const HeroSection = () => {
     const [data, setData] = useState([])
     const onSubmitHandler = async (event) => {
-        // event.preventDefault();
 
         try {
             const responce = await axios.get("http://localhost:5001/recipes");
