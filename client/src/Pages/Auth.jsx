@@ -9,7 +9,7 @@ export const Auth = ({ isModalOpen, closeModal, setIsAuthenticated }) => {
     const navigate = useNavigate();
     const [isLogin, setIsLogin] = useState(false);
 
-    if (!isModalOpen) return null;  // Avoid rendering unnecessary elements
+    if (!isModalOpen) return null;
 
     return (
         <div className="fixed inset-0 gap-5 backdrop-blur w-full bg-opacity-50 flex justify-center items-center">

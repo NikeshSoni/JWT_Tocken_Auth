@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const recipeSchema = mongoose.Schema({
+const recipeSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -15,7 +15,6 @@ const recipeSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-
   imageUrl: {
     type: String,
     required: true,
@@ -26,10 +25,9 @@ const recipeSchema = mongoose.Schema({
   },
   userOwner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "users", // Ensure this matches the UserModel name
     required: true,
   },
 });
 
 export const RecipesModel = mongoose.model("Recipes", recipeSchema);
-

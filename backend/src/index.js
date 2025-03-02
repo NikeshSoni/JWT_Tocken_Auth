@@ -1,14 +1,11 @@
 
 // in the packeg json  useing  "type": "module",  thats 
 //  why the allow to use import 
-
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import { userRouter } from './Routes/user.js'
 import { recipesRouter } from './Routes/recipes.js'
-
-
 
 const app = express();
 
@@ -17,8 +14,7 @@ app.use(cors())
 app.use("/auth" , userRouter)
 app.use("/recipes" , recipesRouter)
 
-const PORT = process.env.PORT || 5001
-;
+const PORT = process.env.PORT || 5001;
 
 mongoose.connect("mongodb://127.0.0.1:27017/Recipe", {
   useNewUrlParser: true,

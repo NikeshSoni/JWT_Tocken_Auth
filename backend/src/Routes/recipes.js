@@ -1,6 +1,6 @@
 import express from "express";
 import { RecipesModel } from "../models/Recipes.js";
-import { UserModel } from "../models/Users.js";
+import { UserModel } from "../models/Users.js"
 
 const router = express.Router();
 
@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
   }
 })
 
-router.post("/", async (req, res) => {
+router.post("/" , async (req, res) => {
 
   const recipe = new RecipesModel(req.body)
   try {
@@ -24,35 +24,60 @@ router.post("/", async (req, res) => {
   }
 })
 
+
 router.put("/", async (req, res) => {
   try {
-    const recipe = new RecipesModel.findById(req.body.recipeId);
-    const user = new UserModel.findById(req.body.userId);
-    user.savedRecipe.push(recipe);
-    await user.save()
+    const recipe = await RecipesModel.findById(req.body.recipeId);
+    if (!recipe) {
+      return res.status(404).json({ message: "Recipe not found" });
+    }
 
-    res.json({ savedRecipe: user.savedRecipe })
+    const user = await UserModel.findById(req.body.userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    user.savedrecipes = user.savedrecipes || [];
+    if (!user.savedrecipes.includes(recipe._id)) {
+      user.savedrecipes.push(recipe._id);
+      await user.save();
+    }
+
+    res.json({ savedRecipes: user.savedrecipes });
   } catch (error) {
-    res.status(500).json(err);
-  }
-})
-
-router.get("/savedRecipe/ids", async (req, res) => {
-  try {
-    const user = await RecipesModel.findById(req.params.recipeId);
-    await RecipesModel.find({_id: { $id: user.savedRecipe }})
-    res.status(200).json({ savedRecipe: user.savedRecipe });
-  } catch (err) {
-    res.status(500).json(err);
+    console.error("Error saving recipe:", error);
+    res.status(500).json({ message: "Internal server error", error });
   }
 });
 
-router.get("/savedRecipe", async (req, res) => {
+router.get("/savedRecipe/ids/:userId", async (req, res) => {
   try {
-    const result = await RecipesModel.findById(req.params?.userId);
-    res.status(200).json({ savedRecipe });
+    console.log(req.params, "Received Params");
+
+    const user = await UserModel.findById(req.params.userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ savedRecipeIds: user.savedrecipes });
   } catch (err) {
-    res.status(500).json(err);
+    console.error("Error fetching saved recipes:", err);
+    res.status(500).json({ message: "Internal server error", error: err });
   }
 });
+
+router.get("/savedRecipe/:userId", async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.params.userId).populate("savedrecipes");
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ savedRecipeIds: user.savedrecipes });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 export { router as recipesRouter };

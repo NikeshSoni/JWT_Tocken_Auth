@@ -9,7 +9,7 @@ const Navbar = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-    const [cookies, setCookies] = useCookies(["access_token"])
+    const [cookies, setCookies] = useCookies(["access_token"]);
 
 
     const openModal = () => setIsModalOpen(true);
@@ -25,25 +25,17 @@ const Navbar = () => {
                 </ul>
 
                 <div>
-                    {/* {!isAuthenticated ? (
-                        <Button className="bg-blue-400" onClick={openModal}>
-                            <Link href="/login">Register</Link>
-                        </Button>
-                    ) : (
-                        <button onClick={openModal} className="px-6 py-2 bg-red-400 text-white rounded-md hover:bg-red-700">
-                            Logout
-                        </button>
-                    )} */}
-                    
-                    {!cookies.access_token ? (
-                        <Button className="bg-blue-400" onClick={openModal}>
-                            <Link href="/login">Login/Register</Link>
-                        </Button>
-                    ) : (
-                        <button onClick={openModal} className="px-6 py-2 bg-red-400 text-white rounded-md hover:bg-red-700">
-                            Logout
-                        </button>
-                    )}
+                    <div>
+                        {!cookies.access_token ? (  // ✅ CORRECT USAGE
+                            <Button className="bg-blue-400" onClick={openModal}>
+                                <Link to="/login">Login/Register</Link>
+                            </Button>
+                        ) : (
+                            <button onClick={openModal} className="px-6 py-2 bg-red-400 text-white rounded-md hover:bg-red-700">
+                                Logout
+                            </button>
+                        )}
+                    </div>
                 </div>
             </nav>
 

@@ -8,11 +8,12 @@ const UserSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
+        required: true, 
     },
     savedrecipes: [{
-        type: mongoose.Schema.Types.ObjectId, ref:"recipe",
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Recipes", // Ensure this matches the RecipesModel name
     }]
-})
+});
 
-export const UserModel = mongoose.model("users", UserSchema)
+export const UserModel = mongoose.model("users", UserSchema); // Ensure the collection name matches

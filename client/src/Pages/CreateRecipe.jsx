@@ -6,6 +6,7 @@ import { Textarea } from "../components/ui/Textarea"
 import { Button } from "../components/ui/Button"
 import useGetUserId from "../hooks/useGetUserId";
 import { toast, Toaster } from "sonner";
+import { useNavigate } from "react-router-dom"
 
 const CreateRecipe = () => {
 
@@ -20,6 +21,8 @@ const CreateRecipe = () => {
         cookingTime: 0,
         userOwner: null,
     });
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (useUserId) {
@@ -78,6 +81,8 @@ const CreateRecipe = () => {
                 cookingTime: 0,
                 userOwner: useUserId,
             });
+
+            navigate("/")
 
         } catch (error) {
             // console.error(error);

@@ -1,123 +1,89 @@
+import { useCookies } from 'react-cookie';
 import React, { useEffect, useState } from 'react';
 import axios from "axios"
-import Hero from "../Logo/hero-img.png"
-import {
-    CardTitle,
-} from "@/components/ui/card"
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
+import { CardTitle } from "@/components/ui/card";
+import SaveIcon from "../Logo/heart-icon.png";
+import IconHeart from "../Logo/save-heart.png"
+import useGetUserId from "../hooks/useGetUserId.jsx"
+
 
 const HeroSection = () => {
-    const [data, setData] = useState([])
-    const onSubmitHandler = async (event) => {
+    const [cookies, _] = useCookies(["access_token"]);
+    const [data, setData] = useState([]);
+    const userId = useGetUserId();
+    const [savedRecipes, setSavedRecipes] = useState([]);
 
+    const onSubmitHandler = async () => {
         try {
             const responce = await axios.get("http://localhost:5001/recipes");
-            console.log(responce.data);
-
             setData(responce.data)
-            // alert("Recipe Created")
         } catch (error) {
             console.log(error)
         }
     }
 
-    useEffect(() => {
-        onSubmitHandler();
-    }, [])
-
-
-    const handleModel = (items, idx) => {
-        return (
-            <>
-                <Dialog>
-                    <DialogTrigger asChild>
-                        <Button variant="outline">Edit Profile</Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                        <DialogHeader>
-                            <DialogTitle>Edit profile</DialogTitle>
-                            <DialogDescription>
-                                Make changes to your profile here. Click save when you're done.
-                            </DialogDescription>
-                        </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="name" className="text-right">
-                                    Name
-                                </Label>
-                                <Input id="name" value="Pedro Duarte" className="col-span-3" />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="username" className="text-right">
-                                    Username
-                                </Label>
-                                <Input id="username" value="@peduarte" className="col-span-3" />
-                            </div>
-                        </div>
-                        <DialogFooter>
-                            <Button type="submit">Save changes</Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
-            </>
-        )
+    const SavedHandler = async () => {
+        try {
+            const responce = await axios.get(`http://localhost:5001/recipes/savedRecipe/ids/${userId}`);
+            console.log(responce.data);
+            setSavedRecipes(responce.data.savedRecipeIds)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
+    const saveRecepi = async (recipeId) => {
+        try {
+            const response = await axios.put(
+                "http://localhost:5001/recipes",
+                { userId, recipeId },
+            );
 
+            console.log(response.data);
+        } catch (error) {
+            console.error("Error saving recipe:", error.response ? error.response.data : error.message);
+        }
+    };
+
+    useEffect(() => {
+        onSubmitHandler();
+        SavedHandler()
+    }, [])
     return (
         <>
-            {/* <div className="bg-gray-100 w-full flex align-center flex-col md:flex-row h-[80vh]">
-                <div className="w-full flex items-center md:w-1/2 p-4">
-                    <div className='p-4'>
-                        <h3 className="text-2xl md:text-4xl font-mono">Make Your won Recepe</h3>
-                        <h2 className="text-2xl md:text-4xl font-mono">Be Heppy</h2>
-                        <p className='mb-2'><span className='font-semibold'>Create personalized dishes,</span> enjoy cooking, and share happiness through food.</p>
-                        <button className="bg-blue-500 mt-2 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300">
-                            Make it
-                        </button>
-
-                    </div>
-                </div>
-                <div className="w-full md:w-1/2 p-4 flex items-center justify-center">
-                    <img className="w-[70%] h-[70%] animated-up-down" src={Hero} alt="Hero" />
-                </div>
-            </div> */}
-            <div className='flex w-[80%] mx-auto my-4'>
+            <div className='flex container mx-auto my-4 gap-7'>
                 {data && data.map((items, idx) => {
                     return (
-                        <>
-                            <div onClick={() => handleModel(items, idx)} key={idx} className="w-[20%] my-3 p-3 shadow-md">
-                                <div className='text-center'>
-                                    <img className='w-[80%] mx-auto' src={items.imageUrl} />
+                        <div key={idx} className="w-[20%] my-3 p-3 border-gray-400 rounded-2xl shadow-md">
+                            <div className="mt-2 font-medium flex items-center justify-between text-2xl">
+                                <div>
+                                    <h1>{items.name}</h1>
                                 </div>
-                                <div className="mt-2">
-                                    <CardTitle>Dish Name : {items.name}</CardTitle>
+
+                                <div>
+                                    {Array.isArray(savedRecipes) && savedRecipes.includes(items._id) ? (
+                                        <img onClick={() => saveRecepi(items._id)} className="w-[1.2rem]" src={IconHeart} />
+                                    ) : (
+                                        <img onClick={() => saveRecepi(items._id)} className="w-[1.2rem]" src={SaveIcon} />
+                                    )}
                                 </div>
-                                {/* <div className=''>
+                            </div>
+                            <div className='text-center my-3'>
+                                <img className='w-[60%] mx-auto' src={items.imageUrl} />
+                            </div>
+                            <div>
                                 <ul>
                                     <CardTitle className="mb-2"> Ingredients </CardTitle>
                                 </ul>
-                                {items.ingredients.map((items) => {
-                                    return <li className='ml-4'> {items} </li>
+                                {items.ingredients.map((items, idx) => {
+                                    return <li key={idx} className='ml-4'> {items} </li>
                                 })}
                             </div>
 
                             <div>
-                                <p>Instructions: {items.instructions}</p>
-                            </div> */}
+                                <CardTitle className="mb-2"> Instructions </CardTitle> {items.instructions}
                             </div>
-                        </>
+                        </div>
                     )
                 })}
             </div>
